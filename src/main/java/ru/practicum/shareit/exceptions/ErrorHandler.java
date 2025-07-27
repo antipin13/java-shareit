@@ -25,16 +25,4 @@ public class ErrorHandler {
     public ErrorResponse handleConflict(final ConflictException e) {
         return new ErrorResponse(e.getMessage());
     }
-
-    /*@ExceptionHandler({InternalServerException.class, SQLException.class})
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleThrowable(final Throwable e) {
-        return new ErrorResponse("Произошла непредвиденная ошибка.");
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-    public ErrorResponse handleConditionNotMet(final ConditionsNotMetException e) {
-        return new ErrorResponse(e.getMessage());
-    }*/
 }

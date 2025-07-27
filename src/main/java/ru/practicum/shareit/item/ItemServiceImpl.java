@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 public class ItemServiceImpl implements ItemService {
     final ItemRepository itemRepository;
     final UserService userService;
+    static final String NOT_FOUND_MESSAGE = "Предмет с ID - %d не найден";
 
     public ItemServiceImpl(@Qualifier("InMemoryStorage") ItemRepository itemRepository, UserService userService) {
         this.itemRepository = itemRepository;
@@ -47,7 +48,7 @@ public class ItemServiceImpl implements ItemService {
         userService.findUserById(userId);
 
         Item existingItem = itemRepository.findItemById(id)
-                .orElseThrow(() -> new NotFoundException(String.format("Предмет с ID - %d не найден", userId)));
+                .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND_MESSAGE, userId)));
 
         existingItem = ItemMapper.updateItemFields(existingItem, request);
 
@@ -64,7 +65,7 @@ public class ItemServiceImpl implements ItemService {
 
         return itemRepository.findItemById(id)
                 .map(ItemMapper::toItemDto)
-                .orElseThrow(() -> new NotFoundException(String.format("Предмет с ID - %d не найден", id)));
+                .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND_MESSAGE, id)));
     }
 
     @Override

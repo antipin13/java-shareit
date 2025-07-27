@@ -15,6 +15,7 @@ import ru.practicum.shareit.user.dto.UserDto;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserServiceImpl implements UserService {
     final UserRepository userRepository;
+    static final String NOT_FOUND_MESSAGE = "Пользователь с ID - %d не найден";
 
     public UserServiceImpl(@Qualifier("InMemoryStorage") UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -34,7 +35,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto updateUser(UpdateUserRequest request, Long userId) {
         User existingUser = userRepository.findUserById(userId)
-                .orElseThrow(() -> new NotFoundException(String.format("Пользователь с ID - %d не найден", userId)));
+                .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND_MESSAGE, userId)));
 
         String oldEmail = existingUser.getEmail();
 
@@ -53,16 +54,14 @@ public class UserServiceImpl implements UserService {
     public UserDto findUserById(Long userId) {
         return userRepository.findUserById(userId)
                 .map(UserMapper::toUserDto)
-                .orElseThrow(() -> new NotFoundException(String.format("Пользователь с ID - %d не найден", userId)));
+                .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND_MESSAGE, userId)));
     }
 
     @Override
     public void removeUser(Long userId) {
         userRepository.findUserById(userId)
-                .orElseThrow(() -> new NotFoundException(String.format("Пользователь с ID - %d не найден", userId)));
+                .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND_MESSAGE, userId)));
 
         userRepository.remove(userId);
     }
-
-
 }
