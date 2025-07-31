@@ -2,20 +2,22 @@ package ru.practicum.shareit.user;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 import ru.practicum.shareit.user.dto.NewUserRequest;
 import ru.practicum.shareit.user.dto.UpdateUserRequest;
 import ru.practicum.shareit.user.dto.UserDto;
 
+@Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserMapper {
-    public static User toUser(NewUserRequest request) {
+    public User toUser(NewUserRequest request) {
         return User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
                 .build();
     }
 
-    public static UserDto toUserDto(User user) {
+    public UserDto toUserDto(User user) {
         return UserDto.builder()
                 .id(user.getId())
                 .name(user.getName())
@@ -23,17 +25,13 @@ public class UserMapper {
                 .build();
     }
 
-    public static User updateUserFields(User user, UpdateUserRequest request) {
-        if (request.hasId()) {
-            user.setId(request.getId());
-        }
-        if (request.hasName()) {
+    public User updateUserFields(User user, UpdateUserRequest request) {
+        if (request.getName() != null && !request.getName().isBlank()) {
             user.setName(request.getName());
         }
-        if (request.hasEmail()) {
+        if (request.getEmail() != null && !request.getEmail().isBlank()) {
             user.setEmail(request.getEmail());
         }
-
         return user;
     }
 }

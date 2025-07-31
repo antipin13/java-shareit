@@ -15,21 +15,23 @@ import ru.practicum.shareit.user.dto.UserDto;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserServiceImpl implements UserService {
     final UserRepository userRepository;
+    final UserMapper userMapper;
     static final String NOT_FOUND_MESSAGE = "Пользователь с ID - %d не найден";
 
-    public UserServiceImpl(@Qualifier("InMemoryStorage") UserRepository userRepository) {
+    public UserServiceImpl(@Qualifier("InMemoryStorage") UserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
+        this.userMapper = userMapper;
     }
 
     @Override
     public UserDto saveUser(NewUserRequest request) {
-        User user = UserMapper.toUser(request);
+        User user = userMapper.toUser(request);
 
         UserValidator.validateUser(user);
 
         user = userRepository.save(user);
 
-        return UserMapper.toUserDto(user);
+        return userMapper.toUserDto(user);
     }
 
     @Override
@@ -39,7 +41,7 @@ public class UserServiceImpl implements UserService {
 
         String oldEmail = existingUser.getEmail();
 
-        existingUser = UserMapper.updateUserFields(existingUser, request);
+        existingUser = userMapper.updateUserFields(existingUser, request);
 
         if (!existingUser.getEmail().equals(oldEmail)) {
             UserValidator.validateUser(existingUser);
@@ -47,21 +49,24 @@ public class UserServiceImpl implements UserService {
 
         existingUser = userRepository.update(existingUser);
 
-        return UserMapper.toUserDto(existingUser);
+        return userMapper.toUserDto(existingUser);
     }
 
     @Override
     public UserDto findUserById(Long userId) {
-        return userRepository.findUserById(userId)
-                .map(UserMapper::toUserDto)
-                .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND_MESSAGE, userId)));
+        return getUserOrThrow(userId);
     }
 
     @Override
     public void removeUser(Long userId) {
-        userRepository.findUserById(userId)
-                .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND_MESSAGE, userId)));
+        UserDto userDto = getUserOrThrow(userId);
 
         userRepository.remove(userId);
+    }
+
+    private UserDto getUserOrThrow(Long userId) {
+        return userRepository.findUserById(userId)
+                .map(userMapper::toUserDto)
+                .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND_MESSAGE, userId)));
     }
 }

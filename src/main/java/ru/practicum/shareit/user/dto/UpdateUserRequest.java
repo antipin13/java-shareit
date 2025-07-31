@@ -1,5 +1,6 @@
 package ru.practicum.shareit.user.dto;
 
+import jakarta.validation.constraints.Email;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -7,19 +8,7 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateUserRequest {
-    Long id;
-    String name;
-    String email;
-
-    public boolean hasId() {
-        return !(id == null);
-    }
-
-    public boolean hasName() {
-        return !(name == null || name.isBlank());
-    }
-
-    public boolean hasEmail() {
-        return !(email == null || email.isBlank());
-    }
+    private String name;
+    @Email(message = "Неверный формат email")
+    private String email;
 }

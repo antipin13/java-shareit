@@ -10,7 +10,9 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.NewItemRequest;
 import ru.practicum.shareit.item.dto.UpdateItemRequest;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.UserService;
+import ru.practicum.shareit.user.UserMapper;
+import ru.practicum.shareit.user.UserRepository;
+import ru.practicum.shareit.user.dto.UserDto;
 
 import java.util.Collections;
 import java.util.List;
@@ -21,71 +23,84 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemServiceImpl implements ItemService {
     final ItemRepository itemRepository;
-    final UserService userService;
-    static final String NOT_FOUND_MESSAGE = "Предмет с ID - %d не найден";
+    final UserRepository userRepository;
+    final ItemMapper itemMapper;
+    final UserMapper userMapper;
+    static final String NOT_FOUND_MESSAGE_ITEM = "Предмет с ID - %d не найден";
+    static final String NOT_FOUND_MESSAGE_USER = "Пользователь с ID - %d не найден";
 
-    public ItemServiceImpl(@Qualifier("InMemoryStorage") ItemRepository itemRepository, UserService userService) {
+    public ItemServiceImpl(@Qualifier("InMemoryStorage") ItemRepository itemRepository,
+                           @Qualifier("InMemoryStorage") UserRepository userRepository, ItemMapper itemMapper,
+                           UserMapper userMapper) {
         this.itemRepository = itemRepository;
-        this.userService = userService;
+        this.userRepository = userRepository;
+        this.itemMapper = itemMapper;
+        this.userMapper = userMapper;
     }
 
     @Override
     public ItemDto saveItem(Long userId, NewItemRequest request) {
-        userService.findUserById(userId);
+        UserDto userDto = getUserOrThrow(userId);
 
-        Item item = ItemMapper.toItem(request);
+        Item item = itemMapper.toItem(request);
         item.setOwner(userId);
 
         ItemValidator.validateItem(item);
 
         item = itemRepository.save(item);
 
-        return ItemMapper.toItemDto(item);
+        return itemMapper.toItemDto(item);
     }
 
     @Override
     public ItemDto updateItem(Long userId, UpdateItemRequest request, Long id) {
-        userService.findUserById(userId);
+        UserDto userDto = getUserOrThrow(userId);
 
         Item existingItem = itemRepository.findItemById(id)
-                .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND_MESSAGE, userId)));
+                .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND_MESSAGE_ITEM, userId)));
 
-        existingItem = ItemMapper.updateItemFields(existingItem, request);
+        existingItem = itemMapper.updateItemFields(existingItem, request);
 
         ItemValidator.validateItem(existingItem);
 
         existingItem = itemRepository.update(existingItem);
 
-        return ItemMapper.toItemDto(existingItem);
+        return itemMapper.toItemDto(existingItem);
     }
 
     @Override
     public ItemDto findItemById(Long userId, Long id) {
-        userService.findUserById(userId);
+        UserDto userDto = getUserOrThrow(userId);
 
         return itemRepository.findItemById(id)
-                .map(ItemMapper::toItemDto)
-                .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND_MESSAGE, id)));
+                .map(itemMapper::toItemDto)
+                .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND_MESSAGE_ITEM, id)));
     }
 
     @Override
     public List<ItemDto> findItemsByUserId(Long userId) {
-        userService.findUserById(userId);
+        UserDto userDto = getUserOrThrow(userId);
 
         return itemRepository.findItemsByUserId(userId).stream()
-                .map(ItemMapper::toItemDto)
+                .map(itemMapper::toItemDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<ItemDto> findItemsByTextAndAvailable(Long userId, String text) {
-        userService.findUserById(userId);
+        UserDto userDto = getUserOrThrow(userId);
 
         if (text == null || text.isBlank()) {
             return Collections.emptyList();
         }
         return itemRepository.findItemsByTextAndAvailable(text).stream()
-                .map(ItemMapper::toItemDto)
+                .map(itemMapper::toItemDto)
                 .collect(Collectors.toList());
+    }
+
+    private UserDto getUserOrThrow(Long userId) {
+        return userRepository.findUserById(userId)
+                .map(userMapper::toUserDto)
+                .orElseThrow(() -> new NotFoundException(String.format(NOT_FOUND_MESSAGE_USER, userId)));
     }
 }

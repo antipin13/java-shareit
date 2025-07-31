@@ -1,11 +1,13 @@
 package ru.practicum.shareit.user;
 
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dto.NewUserRequest;
 import ru.practicum.shareit.user.dto.UpdateUserRequest;
@@ -18,19 +20,20 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Validated
 public class UserController {
     final UserService userService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDto create(@RequestBody NewUserRequest request) {
+    public UserDto create(@Valid @RequestBody NewUserRequest request) {
         log.info("Запрос на добавление пользователя {}", request);
         return userService.saveUser(request);
     }
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDto update(@RequestBody UpdateUserRequest request, @PathVariable Long id) {
+    public UserDto update(@Valid @RequestBody UpdateUserRequest request, @PathVariable Long id) {
         log.info("Запрос на обновление пользователя с ID - {}", id);
         return userService.updateUser(request, id);
     }
