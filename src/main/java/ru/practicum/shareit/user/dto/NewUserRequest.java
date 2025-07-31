@@ -1,17 +1,12 @@
-package ru.practicum.shareit.user;
+package ru.practicum.shareit.user.dto;
 
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Builder
-@Slf4j
-public class User {
-    Long id;
+public class NewUserRequest {
     String name;
     String email;
 }

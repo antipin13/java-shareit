@@ -1,16 +1,16 @@
 package ru.practicum.shareit.item.dto;
 
-import lombok.Builder;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.request.ItemRequest;
 
 @Data
-@Builder
-public class ItemDto {
-    Long id;
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class NewItemRequest {
     String name;
     String description;
     Boolean available;
     Long owner;
-    ItemRequest request;
+    ItemRequest itemRequest;
 }
