@@ -5,16 +5,27 @@ import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.user.dto.NewUserRequest;
 import ru.practicum.shareit.user.dto.UpdateUserRequest;
+import ru.practicum.shareit.user.dto.UserBookingDto;
 import ru.practicum.shareit.user.dto.UserDto;
 
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserMapper {
     public User toUser(NewUserRequest request) {
-        return User.builder()
-                .name(request.getName())
-                .email(request.getEmail())
-                .build();
+        User user = new User();
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+
+        return user;
+    }
+
+    public User toUser(UserDto userDto) {
+        User user = new User();
+        user.setId(userDto.getId());
+        user.setName(userDto.getName());
+        user.setEmail(userDto.getEmail());
+
+        return user;
     }
 
     public UserDto toUserDto(User user) {
@@ -33,5 +44,11 @@ public class UserMapper {
             user.setEmail(request.getEmail());
         }
         return user;
+    }
+
+    public UserBookingDto toUserBookingDto(User user) {
+        return UserBookingDto.builder()
+                .id(user.getId())
+                .build();
     }
 }
