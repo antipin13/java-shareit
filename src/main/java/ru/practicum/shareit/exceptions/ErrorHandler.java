@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Set;
@@ -17,13 +18,6 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 @Slf4j
 public class ErrorHandler {
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleException(final Exception e) {
-        log.warn("Error: ", e);
-        return new ErrorResponse(e.getMessage());
-    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleNotValidParameter(final MethodArgumentNotValidException e) {
@@ -43,7 +37,13 @@ public class ErrorHandler {
         return new ErrorResponse(message);
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(ResponseStatusException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleNotFound(final ResponseStatusException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFound(final NotFoundException e) {
         return new ErrorResponse(e.getMessage());
@@ -52,6 +52,13 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handleConflict(final ConflictException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleException(final Exception e) {
+        log.warn("Error: ", e);
         return new ErrorResponse(e.getMessage());
     }
 }

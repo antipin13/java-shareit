@@ -1,29 +1,34 @@
 package ru.practicum.shareit.item.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.user.User;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "items")
+@Table(name = "comments")
 @NoArgsConstructor
-public class Item {
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    String name;
-
-    String description;
-
-    @Column(name = "is_available")
-    Boolean available;
+    @NotBlank
+    String text;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id")
-    User owner;
+    @JoinColumn(name = "item_id")
+    Item item;
+
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    User author;
+
+    LocalDateTime created = LocalDateTime.now();
 }

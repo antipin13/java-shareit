@@ -9,9 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.NewItemRequest;
-import ru.practicum.shareit.item.dto.UpdateItemRequest;
+import ru.practicum.shareit.item.dto.*;
 
 
 import java.util.List;
@@ -47,13 +45,13 @@ public class ItemController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Optional<ItemDto> findById(@PathVariable Long id, @RequestHeader("X-Sharer-User-Id") Long userId) {
+    public Optional<ItemWithCommentsDto> findById(@PathVariable Long id, @RequestHeader("X-Sharer-User-Id") Long userId) {
         return Optional.ofNullable(itemService.findItemById(userId, id));
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ItemDto> findItemsByUserId(@RequestHeader("X-Sharer-User-Id") Long userId) {
+    public List<ItemWithDateDto> findItemsByUserId(@RequestHeader("X-Sharer-User-Id") Long userId) {
         return itemService.findItemsByUserId(userId);
     }
 
@@ -61,5 +59,12 @@ public class ItemController {
     @ResponseStatus(HttpStatus.OK)
     public List<ItemDto> searchItems(@RequestHeader("X-Sharer-User-Id") Long userId, @RequestParam String text) {
         return itemService.findItemsByTextAndAvailable(userId, text);
+    }
+
+    @PostMapping("/{id}/comment")
+    @ResponseStatus(HttpStatus.CREATED)
+    public CommentDto create(@PathVariable Long id, @RequestHeader("X-Sharer-User-Id") Long userId,
+                             @Valid @RequestBody NewCommentRequest request) {
+        return itemService.saveComment(id, userId, request);
     }
 }
