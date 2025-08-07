@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS items CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS items CASCADE;
 DROP TABLE IF EXISTS bookings CASCADE;
 DROP TABLE IF EXISTS comments CASCADE;
 
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS items (
   is_available BOOLEAN NOT NULL,
   owner_id BIGINT,
   CONSTRAINT pk_item PRIMARY KEY (id),
-  CONSTRAINT fk_owner FOREIGN KEY (owner_id) REFERENCES "users" (id)
+  CONSTRAINT fk_owner FOREIGN KEY (owner_id) REFERENCES users (id)
 );
 
 CREATE TABLE IF NOT EXISTS bookings (
@@ -29,8 +29,8 @@ CREATE TABLE IF NOT EXISTS bookings (
   booker_id BIGINT NOT NULL,
   status VARCHAR(25) NOT NULL,
   CONSTRAINT pk_booking PRIMARY KEY (id),
-  CONSTRAINT fk_item FOREIGN KEY (item_id) REFERENCES "items" (id),
-  CONSTRAINT fk_booker FOREIGN KEY (booker_id) REFERENCES "users" (id)
+  CONSTRAINT fk_item FOREIGN KEY (item_id) REFERENCES items (id),
+  CONSTRAINT fk_booker FOREIGN KEY (booker_id) REFERENCES users (id)
 );
 
 CREATE TABLE IF NOT EXISTS comments (
@@ -40,6 +40,6 @@ CREATE TABLE IF NOT EXISTS comments (
   author_id BIGINT,
   created TIMESTAMP NOT NULL,
   CONSTRAINT pk_comment PRIMARY KEY (id),
-  CONSTRAINT fk_item FOREIGN KEY (item_id) REFERENCES "items" (id),
-  CONSTRAINT fk_author FOREIGN KEY (author_id) REFERENCES "users" (id)
+  CONSTRAINT fk_item_comments FOREIGN KEY (item_id) REFERENCES items (id),
+  CONSTRAINT fk_author FOREIGN KEY (author_id) REFERENCES users (id)
 );
