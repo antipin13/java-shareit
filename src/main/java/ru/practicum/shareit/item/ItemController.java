@@ -23,11 +23,13 @@ import java.util.Optional;
 @Validated
 public class ItemController {
     final ItemService itemService;
+    static final String HEADER_USER_ID = "X-Sharer-User-Id";
+    static final String NOT_FOUND_HEADER_USER_ID_MESSAGE = "ID пользователя должно быть указано в заголовке";
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ItemDto create(@RequestHeader(value = "X-Sharer-User-Id", required = false)
-                              @NotNull(message = "ID пользователя должно быть указано в заголовке") Long userId,
+    public ItemDto create(@RequestHeader(value = HEADER_USER_ID, required = false)
+                              @NotNull(message = NOT_FOUND_HEADER_USER_ID_MESSAGE) Long userId,
                        @Valid @RequestBody NewItemRequest request) {
         log.info("Запрос на добавление предмета {}", request);
         return itemService.saveItem(userId, request);
@@ -35,8 +37,8 @@ public class ItemController {
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ItemDto update(@RequestHeader("X-Sharer-User-Id")
-                              @NotNull(message = "ID пользователя должно быть указано в заголовке") Long userId,
+    public ItemDto update(@RequestHeader(HEADER_USER_ID)
+                              @NotNull(message = NOT_FOUND_HEADER_USER_ID_MESSAGE) Long userId,
                           @Valid @RequestBody UpdateItemRequest request,
                           @PathVariable Long id) {
         log.info("Запрос на обновление предмета - {}", request);
@@ -45,25 +47,25 @@ public class ItemController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Optional<ItemWithCommentsDto> findById(@PathVariable Long id, @RequestHeader("X-Sharer-User-Id") Long userId) {
+    public Optional<ItemWithCommentsDto> findById(@PathVariable Long id, @RequestHeader(HEADER_USER_ID) Long userId) {
         return Optional.ofNullable(itemService.findItemById(userId, id));
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ItemWithDateDto> findItemsByUserId(@RequestHeader("X-Sharer-User-Id") Long userId) {
+    public List<ItemWithDateDto> findItemsByUserId(@RequestHeader(HEADER_USER_ID) Long userId) {
         return itemService.findItemsByUserId(userId);
     }
 
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
-    public List<ItemDto> searchItems(@RequestHeader("X-Sharer-User-Id") Long userId, @RequestParam String text) {
+    public List<ItemDto> searchItems(@RequestHeader(HEADER_USER_ID) Long userId, @RequestParam String text) {
         return itemService.findItemsByTextAndAvailable(userId, text);
     }
 
     @PostMapping("/{id}/comment")
     @ResponseStatus(HttpStatus.CREATED)
-    public CommentDto create(@PathVariable Long id, @RequestHeader("X-Sharer-User-Id") Long userId,
+    public CommentDto create(@PathVariable Long id, @RequestHeader(HEADER_USER_ID) Long userId,
                              @Valid @RequestBody NewCommentRequest request) {
         return itemService.saveComment(id, userId, request);
     }

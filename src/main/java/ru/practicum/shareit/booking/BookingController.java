@@ -22,11 +22,13 @@ import java.util.List;
 @Validated
 public class BookingController {
     final BookingServiceImpl bookingService;
+    static final String HEADER_USER_ID = "X-Sharer-User-Id";
+    static final String NOT_FOUND_HEADER_USER_ID_MESSAGE = "ID пользователя должно быть указано в заголовке";
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public BookingDto create(@RequestHeader(value = "X-Sharer-User-Id", required = false)
-                                 @NotNull(message = "ID пользователя должно быть указано в заголовке") Long userId,
+    public BookingDto create(@RequestHeader(value = HEADER_USER_ID, required = false)
+                                 @NotNull(message = NOT_FOUND_HEADER_USER_ID_MESSAGE) Long userId,
                              @Valid @RequestBody NewBookingRequest request) {
         log.info("Запрос на добавление бронирования {}", request);
             return bookingService.saveBooking(userId, request);
@@ -34,8 +36,8 @@ public class BookingController {
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public BookingDto approveBooking(@RequestHeader(value = "X-Sharer-User-Id", required = false)
-                                         @NotNull(message = "ID пользователя должно быть указано в заголовке") Long userId,
+    public BookingDto approveBooking(@RequestHeader(value = HEADER_USER_ID, required = false)
+                                         @NotNull(message = NOT_FOUND_HEADER_USER_ID_MESSAGE) Long userId,
                                      @PathVariable Long id, @RequestParam Boolean approved) {
         log.info("Запрос на подтверждение бронирования с ID - {}", id);
         return bookingService.approveBooking(id, userId, approved);
@@ -43,8 +45,8 @@ public class BookingController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public BookingDto approveBooking(@RequestHeader(value = "X-Sharer-User-Id", required = false)
-                                     @NotNull(message = "ID пользователя должно быть указано в заголовке") Long userId,
+    public BookingDto approveBooking(@RequestHeader(value = HEADER_USER_ID, required = false)
+                                     @NotNull(message = NOT_FOUND_HEADER_USER_ID_MESSAGE) Long userId,
                                      @PathVariable Long id) {
         log.info("Запрос на получение бронирования с ID - {}", id);
         return bookingService.getBookingByBookerIdOrOwnerId(id, userId);
@@ -52,8 +54,8 @@ public class BookingController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<BookingDto> approveBooking(@RequestHeader(value = "X-Sharer-User-Id", required = false)
-                                     @NotNull(message = "ID пользователя должно быть указано в заголовке") Long userId) {
+    public List<BookingDto> approveBooking(@RequestHeader(value = HEADER_USER_ID, required = false)
+                                     @NotNull(message = NOT_FOUND_HEADER_USER_ID_MESSAGE) Long userId) {
         log.info("Запрос на получение бронирований пользователя с ID - {}", userId);
         return bookingService.getBookingByBooker(userId);
     }
