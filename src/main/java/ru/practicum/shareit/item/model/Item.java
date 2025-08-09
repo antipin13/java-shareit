@@ -1,19 +1,29 @@
 package ru.practicum.shareit.item.model;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.user.User;
 
-@Data
+@Getter
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Builder
+@Entity
+@Table(name = "items")
+@NoArgsConstructor
 public class Item {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+
     String name;
+
     String description;
+
+    @Column(name = "is_available")
     Boolean available;
-    Long owner;
-    ItemRequest request;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    User owner;
 }
