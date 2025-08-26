@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateUserRequest {
-    private String name;
+    String name;
     @Email(message = "Неверный формат email")
-    private String email;
+    String email;
 }

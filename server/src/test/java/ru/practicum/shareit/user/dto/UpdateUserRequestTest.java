@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 class UpdateUserRequestTest {
-static Validator validator;
+    static Validator validator;
 
     @BeforeAll
     public static void setupValidator() {

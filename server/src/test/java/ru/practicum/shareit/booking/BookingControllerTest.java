@@ -1,6 +1,8 @@
 package ru.practicum.shareit.booking;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,16 +24,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 class BookingControllerTest {
     @Mock
-    private BookingServiceImpl bookingService;
+    BookingServiceImpl bookingService;
 
     @InjectMocks
-    private BookingController bookingController;
+    BookingController bookingController;
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    final ObjectMapper mapper = new ObjectMapper();
 
-    private MockMvc mvc;
+    MockMvc mvc;
 
     @BeforeEach
     void setUp() {

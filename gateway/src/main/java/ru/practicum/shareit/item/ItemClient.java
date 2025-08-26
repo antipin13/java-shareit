@@ -1,5 +1,7 @@
 package ru.practicum.shareit.item;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -17,12 +19,13 @@ import java.net.URI;
 import java.util.List;
 
 @Component
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemClient {
 
-    private final RestTemplate restTemplate;
+    final RestTemplate restTemplate;
 
     @Value("${shareit-server.url}")
-    private String baseUrl;
+    String baseUrl;
 
     public ItemClient() {
         this.restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory(HttpClients.createDefault()));

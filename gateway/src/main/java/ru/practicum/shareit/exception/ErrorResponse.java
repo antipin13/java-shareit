@@ -1,7 +1,11 @@
 package ru.practicum.shareit.exception;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ErrorResponse {
-    private String error;
+    String error;
 
     public ErrorResponse(String error) {
         this.error = error;

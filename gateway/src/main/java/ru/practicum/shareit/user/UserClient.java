@@ -1,5 +1,7 @@
 package ru.practicum.shareit.user;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -14,11 +16,12 @@ import ru.practicum.shareit.user.dto.UserDto;
 import java.net.URI;
 
 @Component
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserClient {
-    private final RestTemplate restTemplate;
+    final RestTemplate restTemplate;
 
     @Value("${shareit-server.url}")
-    private String baseUrl;
+    String baseUrl;
 
     public UserClient() {
         this.restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory(HttpClients.createDefault()));

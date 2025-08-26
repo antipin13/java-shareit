@@ -39,19 +39,19 @@ import static org.mockito.Mockito.when;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 class ItemServiceImplTest {
     @Mock
-    private Item item;
+    Item item;
 
     @Mock
-    private User user;
+    User user;
 
     @Mock
-    private Comment comment;
+    Comment comment;
 
     @Mock
-    private NewCommentRequest request;
+    NewCommentRequest request;
 
     @Mock
-    private CommentDto commentDto;
+    CommentDto commentDto;
 
     @Mock
     ItemRepository itemRepository;

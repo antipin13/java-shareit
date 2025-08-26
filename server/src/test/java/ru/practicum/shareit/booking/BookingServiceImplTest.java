@@ -1,5 +1,7 @@
 package ru.practicum.shareit.booking;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,35 +33,36 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 class BookingServiceImplTest {
     @Mock
-    private UserRepository userRepository;
+    UserRepository userRepository;
     @Mock
-    private ItemRepository itemRepository;
+    ItemRepository itemRepository;
     @Mock
-    private BookingRepository bookingRepository;
+    BookingRepository bookingRepository;
     @Mock
-    private BookingMapper bookingMapper;
+    BookingMapper bookingMapper;
     @Mock
-    private ItemMapper itemMapper;
+    ItemMapper itemMapper;
     @Mock
-    private UserMapper userMapper;
+    UserMapper userMapper;
 
     @Spy
     @InjectMocks
-    private BookingServiceImpl bookingService;
+    BookingServiceImpl bookingService;
 
     @Mock
-    private NewBookingRequest request;
+    NewBookingRequest request;
 
     @Mock
-    private User user;
+    User user;
 
     @Mock
-    private Item item;
+    Item item;
 
-    private Booking booking;
-    private BookingDto bookingDto;
+    Booking booking;
+    BookingDto bookingDto;
 
     @BeforeEach
     void setUp() {

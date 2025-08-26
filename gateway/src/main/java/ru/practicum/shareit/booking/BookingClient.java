@@ -1,5 +1,7 @@
 package ru.practicum.shareit.booking;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,12 +20,13 @@ import java.util.List;
 
 @Component
 @Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookingClient {
 
-    private final RestTemplate restTemplate;
+    final RestTemplate restTemplate;
 
     @Value("${shareit-server.url}")
-    private String baseUrl;
+    String baseUrl;
 
     public BookingClient() {
         this.restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory(HttpClients.createDefault()));

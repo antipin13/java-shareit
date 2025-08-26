@@ -1,5 +1,7 @@
 package ru.practicum.shareit.user;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,21 +16,22 @@ import static org.mockito.Mockito.when;
 import ru.practicum.shareit.exceptions.NotFoundException;
 
 @ExtendWith(MockitoExtension.class)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 class UserServiceImplTest {
     @Mock
-    private UserRepository userRepository;
+    UserRepository userRepository;
 
     @Mock
-    private UserMapper userMapper;
+    UserMapper userMapper;
 
     @Spy
     @InjectMocks
-    private UserServiceImpl userService;
+    UserServiceImpl userService;
 
-    private NewUserRequest request;
-    private UpdateUserRequest updatedUserRequest;
-    private User user;
-    private UserDto userDto;
+    NewUserRequest request;
+    UpdateUserRequest updatedUserRequest;
+    User user;
+    UserDto userDto;
 
     @Test
     void shouldSaveUserAndReturnDto() {

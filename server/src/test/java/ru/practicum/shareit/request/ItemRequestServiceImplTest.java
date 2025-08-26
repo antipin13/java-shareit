@@ -1,5 +1,7 @@
 package ru.practicum.shareit.request;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,24 +24,25 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 class ItemRequestServiceImplTest {
     @Mock
-    private UserRepository userRepository;
+    UserRepository userRepository;
 
     @Mock
-    private ItemRepository itemRepository;
+    ItemRepository itemRepository;
 
     @Mock
-    private ItemRequestRepository itemRequestRepository;
+    ItemRequestRepository itemRequestRepository;
 
     @Mock
-    private ItemRequestMapper itemRequestMapper;
+    ItemRequestMapper itemRequestMapper;
 
     @InjectMocks
-    private ItemRequestServiceImpl itemRequestService;
+    ItemRequestServiceImpl itemRequestService;
 
     @Mock
-    private User user;
+    User user;
 
     @BeforeEach
     void setUp() {
