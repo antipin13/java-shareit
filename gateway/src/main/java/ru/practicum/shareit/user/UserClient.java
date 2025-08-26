@@ -4,6 +4,7 @@ import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -15,7 +16,9 @@ import java.net.URI;
 @Component
 public class UserClient {
     private final RestTemplate restTemplate;
-    private final String baseUrl = "http://localhost:9090";
+
+    @Value("${shareit-server.url}")
+    private String baseUrl;
 
     public UserClient() {
         this.restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory(HttpClients.createDefault()));

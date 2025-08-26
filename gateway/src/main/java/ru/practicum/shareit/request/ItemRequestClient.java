@@ -1,5 +1,6 @@
 package ru.practicum.shareit.request;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,9 @@ import java.util.List;
 public class ItemRequestClient {
 
     private final RestTemplate restTemplate;
-    private final String baseUrl = "http://localhost:9090";
+
+    @Value("${shareit-server.url}")
+    private String baseUrl;
 
     public ItemRequestClient() {
         this.restTemplate = new RestTemplate();

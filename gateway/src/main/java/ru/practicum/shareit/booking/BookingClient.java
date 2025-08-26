@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -20,7 +21,9 @@ import java.util.List;
 public class BookingClient {
 
     private final RestTemplate restTemplate;
-    private final String baseUrl = "http://localhost:9090";
+
+    @Value("${shareit-server.url}")
+    private String baseUrl;
 
     public BookingClient() {
         this.restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory(HttpClients.createDefault()));
